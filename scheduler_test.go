@@ -38,6 +38,7 @@ func newGate() *gate {
 
 func (g *gate) job(id string, role Role, typ Type) Job {
 	return Job{ID: id, Role: role, Type: typ, Run: func() {
+		fmt.Println("started:", id)
 		g.started <- id
 		<-g.release
 	}}
