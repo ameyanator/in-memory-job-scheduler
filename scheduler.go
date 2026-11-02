@@ -76,9 +76,9 @@ func (s *Scheduler) work() {
 			// One finish enables at most one start, which this worker takes.
 			continue
 		}
-		if s.closed && s.core.idle() {
-			// Workers asleep behind a rerun at its limit won't otherwise wake.
-			s.wake.Broadcast()
+		if s.closed {
+			// Any queued job is a rerun at its limit; the workers running
+			// reruns will start it.
 			return
 		}
 		s.wake.Wait()

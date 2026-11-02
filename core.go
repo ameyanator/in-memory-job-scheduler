@@ -50,9 +50,3 @@ func (c *core) finish(role Role) {
 		c.liveRunning--
 	}
 }
-
-// idle reports whether no job is waiting or running.
-func (c *core) idle() bool {
-	return c.live.len() == 0 && c.rerun.len() == 0 &&
-		c.liveRunning == 0 && c.rerunRunning == 0
-}

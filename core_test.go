@@ -152,25 +152,6 @@ func TestNextOnEmptyCoreTakesNoSlot(t *testing.T) {
 	wantRunning(t, c, 0, 0)
 }
 
-func TestIdle(t *testing.T) {
-	c, _ := newTestCore(4, 2)
-	if !c.idle() {
-		t.Fatal("new core is not idle")
-	}
-	submitN(c, Rerun, 1)
-	if c.idle() {
-		t.Fatal("idle with a job waiting")
-	}
-	dispatch(c)
-	if c.idle() {
-		t.Fatal("idle with a job running")
-	}
-	c.finish(Rerun)
-	if !c.idle() {
-		t.Fatal("not idle after the last job finished")
-	}
-}
-
 func TestSubmitUsesClockForAging(t *testing.T) {
 	c, clock := newTestCore(1, 1)
 	c.submit(Job{ID: "full", Role: Live, Type: Full, Run: noop})
