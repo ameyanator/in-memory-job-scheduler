@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="440" viewBox="0 0 760 440" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title>Scheduler architecture</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3d4a57"/>
+    </marker>
+  </defs>
+
+  <rect width="760" height="440" fill="#ffffff"/>
+
+  <!-- Callers and workers -->
+  <rect x="60" y="20" width="180" height="44" rx="6" fill="#ffffff" stroke="#3d4a57" stroke-width="1.5"/>
+  <text x="150" y="47" text-anchor="middle" font-size="15" font-weight="600" fill="#1f2933">Submit(job)</text>
+
+  <rect x="480" y="20" width="220" height="44" rx="6" fill="#ffffff" stroke="#3d4a57" stroke-width="1.5"/>
+  <text x="590" y="47" text-anchor="middle" font-size="15" font-weight="600" fill="#1f2933">total worker goroutines</text>
+
+  <!-- Scheduler shell -->
+  <rect x="20" y="100" width="720" height="250" rx="10" fill="#f3f5f8" stroke="#8a96a3" stroke-width="1.5"/>
+  <text x="40" y="128" font-size="16" font-weight="700" fill="#1f2933">Scheduler</text>
+  <text x="172" y="128" font-size="13" fill="#52606d">one mutex · condition variable · worker pool</text>
+
+  <!-- Core -->
+  <rect x="50" y="168" width="660" height="162" rx="8" fill="#ffffff" stroke="#4a6fa5" stroke-width="1.5"/>
+  <text x="70" y="194" font-size="15" font-weight="700" fill="#1f2933">core: capacity rule and dispatch</text>
+  <text x="330" y="194" font-size="13" fill="#52606d">single-threaded, no locks</text>
+
+  <rect x="80" y="212" width="170" height="58" rx="6" fill="#e8f0fb" stroke="#4a6fa5"/>
+  <text x="165" y="237" text-anchor="middle" font-size="14" font-weight="600" fill="#1f2933">live heap</text>
+  <text x="165" y="257" text-anchor="middle" font-size="12" fill="#52606d">ordered by (key, seq)</text>
+
+  <rect x="280" y="212" width="170" height="58" rx="6" fill="#e8f0fb" stroke="#4a6fa5"/>
+  <text x="365" y="237" text-anchor="middle" font-size="14" font-weight="600" fill="#1f2933">rerun heap</text>
+  <text x="365" y="257" text-anchor="middle" font-size="12" fill="#52606d">ordered by (key, seq)</text>
+
+  <rect x="480" y="212" width="200" height="58" rx="6" fill="#eef6ee" stroke="#5a8f5a"/>
+  <text x="580" y="237" text-anchor="middle" font-size="14" font-weight="600" fill="#1f2933">running counts</text>
+  <text x="580" y="257" text-anchor="middle" font-size="12" fill="#52606d">live · rerun</text>
+
+  <text x="70" y="304" font-size="13" fill="#1f2933">next(): start a rerun if one waits and rerun_running &lt; rerun_max, otherwise a live job</text>
+
+  <!-- Clock -->
+  <rect x="290" y="382" width="180" height="40" rx="6" fill="#ffffff" stroke="#3d4a57" stroke-width="1.5"/>
+  <text x="380" y="407" text-anchor="middle" font-size="15" font-weight="600" fill="#1f2933">Clock (injected)</text>
+
+  <!-- Arrows -->
+  <line x1="150" y1="64" x2="150" y2="166" stroke="#3d4a57" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="158" y="88" font-size="12" fill="#52606d">push to its role's heap</text>
+
+  <line x1="590" y1="66" x2="590" y2="166" stroke="#3d4a57" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <text x="598" y="88" font-size="12" fill="#52606d">next() / finish()</text>
+
+  <line x1="380" y1="380" x2="380" y2="332" stroke="#3d4a57" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="388" y="368" font-size="12" fill="#52606d">Now() at submit</text>
+</svg>
